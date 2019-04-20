@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo2.mapper.UserMapper">
+    <select id="getUserInfo"  resultType="com.example.demo2.entity.UserVm">
+        SELECT
+        	u.user_id AS userId,
+        	u.user_name AS userName,
+        	u.user_pwd AS userPwd,
+        	u.user_age AS userAge,
+        	u.user_phone AS userPhone,
+            u.user_sex AS userSex,
+            u.user_money AS userMoney,
+            u.user_address AS userAddress,
+            u.user_picture AS userPicture
+        FROM
+	        user_tbl u 
+	    <where>
+            <if test="userId != null and  userId != '' ">
+                AND u.user_id = #{userId}
+            </if>
+            <if test="userName != null and userName !='' ">
+                AND u.user_name = #{userName}
+            </if>
+        </where>
+    </select>
+    
+    <insert id="addUser" parameterType="com.example.demo2.entity.evt.UserEvt">
+        INSERT INTO user_tbl(
+        	user_id,
+        	user_name,
+	        user_pwd,
+            user_age,
+	        user_phone,
+	        user_sex,
+	        user_money,
+        	user_address,
+        	user_picture
+        )
+        VALUES (
+        	#{userId},
+        	#{userName},
+        	#{userPwd},
+        	#{userAge},
+        	#{userPhone},
+        	#{userSex},
+        	#{userMoney},
+        	#{userAddress},
+        	#{userPicture}
+        )
+    </insert>
+    
+    <delete id="deleteUser" parameterType="java.util.List">
+       DELETE FROM user_tbl u WHERE u.user_id
+       IN<foreach collection="list" item="item" open="(" separator="," close=")"> #{item} </foreach>
+    </delete>
+
+    <update id="updateUser" parameterType="com.example.demo2.entity.evt.UserEvt">
+        UPDATE user_tbl SET
+         	user_id = #{userId},
+        	user_name = #{userName},
+	        user_pwd = #{userPwd},
+            user_age = #{userAge},
+	        user_phone = #{userPhone},
+	        user_sex = #{userSex},
+	        user_money = #{userMoney},
+        	user_address = #{userAddress},
+        	user_picture = #{userPicture}
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="userLogin" resultType="com.example.demo2.entity.UserVm">
+        SELECT
+        u.user_id AS userId,
+        u.user_name AS userName,
+        u.user_pwd AS userPwd,
+        u.user_age AS userAge,
+        u.user_phone AS userPhone,
+        u.user_sex AS userSex,
+        u.user_money AS userMoney,
+        u.user_address AS userAddress,
+        u.user_picture AS userPicture
+        FROM
+        user_tbl u
+        <where>
+            <if test="userId != null and  userId != '' ">
+                AND u.user_id = #{userId}
+            </if>
+            <if test="userPwd != null and userPwd !='' ">
+                AND u.user_pwd = #{userPwd}
+            </if>
+        </where>
+    </select>
+
+    <select id="getOneUserInfo"  resultType="com.example.demo2.entity.UserVm">
+        SELECT
+        u.user_id AS userId,
+        u.user_name AS userName,
+        u.user_pwd AS userPwd,
+        u.user_age AS userAge,
+        u.user_phone AS userPhone,
+        u.user_sex AS userSex,
+        u.user_money AS userMoney,
+        u.user_address AS userAddress,
+        u.user_picture AS userPicture
+        FROM
+        user_tbl u
+        <where>
+            <if test="userId != null and  userId != '' ">
+                AND u.user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+
+
+</mapper>

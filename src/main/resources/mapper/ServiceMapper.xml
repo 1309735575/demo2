@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo2.mapper.ServiceMapper">
+
+    <select id="getServiceInfo" resultType="com.example.demo2.entity.ServiceListVm">
+        SELECT
+        	s.service_id AS serviceId,
+        	s.work_name AS workName,
+        	s.service_name AS serviceName,
+        	s.service_duty AS serviceDuty,
+        	s.parent_id AS parentId
+        FROM
+        	service_tbl s
+        <where>
+            <if test="serviceId != null and serviceId != '' ">
+                AND service_id = #{serviceId}
+            </if>
+            <if test="workName != null and workName != '' ">
+                AND work_name LIKE CONCAT('%',#{workName},'%')
+            </if>
+            <if test="serviceName != null and serviceName != '' ">
+                AND service_name LIKE CONCAT('%',#{serviceName},'%')
+            </if>
+            <if test="serviceDuty != null and serviceDuty != '' ">
+                AND service_duty = #{serviceDuty}
+            </if>
+            <if test="parentId != null and parentId != '' ">
+                AND parent_id = #{parentId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getSonServiceInfo" resultType="com.example.demo2.entity.ServiceVm">
+        SELECT
+        s.service_id AS serviceId,
+        s.work_name AS workName,
+        s.service_name AS serviceName,
+        s.service_duty AS serviceDuty,
+        s.parent_id AS parentId
+        FROM
+        service_tbl s
+        <where>
+            <if test="serviceId != null and serviceId != '' ">
+                AND service_id = #{serviceId}
+            </if>
+            <if test="workName != null and workName != '' ">
+                AND work_name LIKE CONCAT('%',#{workName},'%')
+            </if>
+            <if test="serviceName != null and serviceName != '' ">
+                AND service_name LIKE CONCAT('%',#{serviceName},'%')
+            </if>
+            <if test="serviceDuty != null and serviceDuty != '' ">
+                AND service_duty = #{serviceDuty}
+            </if>
+            <if test="parentId != null and parentId != '' ">
+                AND parent_id = #{parentId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 添加种类信息 -->
+    <insert id="addService" parameterType="com.example.demo2.entity.evt.ServiceEvt">
+        INSERT INTO service_tbl(
+        	service_id,
+        	work_name,
+        	service_name,
+        	service_duty,
+        	parent_id
+        )
+        VALUES
+        (
+        	#{serviceId},
+			#{workName},
+			#{serviceName},
+			#{serviceDuty},
+			#{parentId}
+	    )
+    </insert>
+
+    <delete id="deleteService" parameterType="com.example.demo2.entity.evt.ServiceIdEvt">
+        DELETE FROM service_tbl WHERE service_id = #{serviceId}
+    </delete>
+
+    <update id="updateService" parameterType="com.example.demo2.entity.evt.ServiceEvt">
+        UPDATE service_tbl
+        <set>
+        <if test="workName != null and workName != '' ">
+            work_name = #{workName},
+        </if>
+        <if test="serviceName != null and serviceName != '' ">
+            service_name = #{serviceName},
+        </if>
+        <if test="serviceDuty != null and serviceDuty != '' ">
+            service_duty = #{serviceDuty},
+        </if>
+        <if test="parentId != null and parentId != '' ">
+            parent_id = #{parentId}
+        </if>
+        </set>
+        WHERE service_id = #{serviceId}
+    </update>
+
+
+</mapper>

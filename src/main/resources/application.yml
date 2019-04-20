@@ -1,0 +1,35 @@
+#默认使用配置
+spring:
+  profiles:
+    active: dev
+  thymeleaf:
+    prefix: classpath:/templates/
+
+#公共配置与profiles选择无关
+mybatis:
+  typeAliasesPackage: com.example.demo2.entity
+  mapperLocations: classpath:mapper/*.xml
+
+---
+
+#开发配置
+spring:
+  profiles: dev
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=GMT%2B8&characterEncoding=utf-8
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 使用druid数据源
+#    type: com.alibaba.druid.pool.DruidDataSource
+#pagehelper分页插件
+pagehelper:
+auto-runtime-dialect: true  #设置为 true 时，允许在运行时根据多数据源自动识别对应方言的分页
+close-conn: true  #控制获取连接后，是否关闭该连接。 默认为 true
+reasonable: true #分页合理化，默认false
+support-methods-arguments: true #是否支持接口参数来传递分页参数，默认false
+params: count=countSql
+page-size-zero: true  #true的时候，如果pagesize设置为0(或RowBounds的limit=0)就不执行分页,返回全部结果,默认false
+
+

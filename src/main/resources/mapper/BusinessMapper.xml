@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo2.mapper.BusinessMapper">
+
+    <select id="getBusinessInfo" resultType="com.example.demo2.entity.BusinessVm">
+        SELECT
+        b.business_id AS businessId,
+        b.business_name AS businessName,
+        b.business_detail AS businessDetail
+        FROM
+        business_tbl b
+        <where>
+            <if test="businessId != null and businessId != '' ">
+                AND business_id = #{businessId}
+            </if>
+            <if test="businessName != null and businessName != '' ">
+                AND business_name = #{businessName}
+            </if>
+            <if test="businessDetail != null and businessDetail != '' ">
+                AND business_detail = #{businessDetail}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateBusiness" parameterType="com.example.demo2.entity.evt.BusinessEvt">
+        UPDATE business_tbl
+        <set>
+            <if test="businessName != null and businessName != '' ">
+                AND business_name = #{businessName}
+            </if>
+            <if test="businessDetail != null and businessDetail != '' ">
+                AND business_detail = #{businessDetail}
+            </if>
+        </set>
+        WHERE business_id = #{businessId}
+    </update>
+
+
+    <insert id="addBusiness" parameterType="com.example.demo2.entity.evt.BusinessEvt">
+        INSERT INTO business_tbl(
+        	business_id,
+        	business_name,
+        	business_detail
+        )
+        VALUES
+        (
+        	#{businessId},
+        	#{businessName},
+        	#{businessDetail}
+	    )
+    </insert>
+
+    <delete id="deleteBusiness" parameterType="com.example.demo2.entity.evt.BusinessIdEvt">
+        DELETE FROM business_tbl WHERE business_id = #{businessId}
+    </delete>
+</mapper>

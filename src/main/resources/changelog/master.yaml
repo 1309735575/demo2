@@ -1,0 +1,47 @@
+databaseChangeLog:
+  # 支持 yaml 格式的 SQL 语法
+  - changeSet:
+      id: 201901081
+      author: Levin
+      changes:
+        - createTable:
+            tableName: person
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 201901082
+      author: Levin
+      changes:
+        - insert:
+            tableName: person
+            columns:
+              - column:
+                  name: first_name
+                  value: Marcel
+              - column:
+                  name: last_name
+                  value: Overdijk
+  - changeSet:
+      id: 201901083
+      author: Levin
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: classpath:changelog/sqlfile/user.sql

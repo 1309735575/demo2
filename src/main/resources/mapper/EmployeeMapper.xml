@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo2.mapper.EmployeeMapper">
+
+    <!-- 获取详细的服务人员信息 -->
+    <select id="getEmployeeInfo" resultType="com.example.demo2.entity.EmployeeVm">
+        SELECT
+        e.employee_id AS employeeId,
+        e.employee_name AS employeeName,
+        e.employee_age AS employeeAge,
+        e.employee_phone AS employeePhone,
+        e.employee_business AS employeeBusiness,
+        b.business_name AS businessName,
+        e.employee_pwd AS employeePwd,
+        e.employee_service AS employeeService,
+        s.service_name AS serviceName,
+        e.employee_money AS employeeMoney,
+        o.employeeOrder AS employeeOrder
+        FROM
+        employee_tbl e
+        LEFT JOIN business_tbl b ON e.employee_business = b.business_id
+        LEFT JOIN service_tbl s ON e.employee_service = s.service_id
+        LEFT JOIN(
+        SELECT
+        ot.employee_id,
+        count(*)AS employeeOrder
+        FROM
+        order_tbl ot
+        <where>
+            <if test="orderState != null and orderState != '' ">
+                AND ot.order_state = #{orderState}
+            </if>
+            <if test="orderEvaluate != null and orderEvaluate != '' ">
+                AND ot.order_evaluate = #{orderEvaluate}
+            </if>
+        </where>
+        GROUP BY
+        employee_id
+        )o ON e.employee_id = o.employee_id
+        <where>
+            <if test="employeeId != null and employeeId != '' ">
+                AND e.employee_id = #{employeeId}
+            </if>
+            <if test="employeeName != null and employeeName != '' ">
+                AND e.employee_name LIKE CONCAT('%',#{employeeName},'%')
+            </if>
+            <if test="employeeBusiness != null and employeeBusiness != '' ">
+                AND e.employee_business = #{employeeBusiness}
+            </if>
+            <if test="employeeService != null and employeeService != '' ">
+                AND e.employee_service = #{employeeService}
+            </if>
+        </where>
+        ORDER BY employeeOrder DESC
+    </select>
+
+
+    <!-- 添加服务人员信息 -->
+    <insert id="addEmployee" parameterType="com.example.demo2.entity.evt.EmployeeEvt">
+        INSERT INTO employee_tbl(
+        	employee_id,
+        	employee_name,
+        	employee_age,
+        	employee_phone,
+        	employee_business,
+        	employee_pwd,
+        	employee_service,
+        	employee_money,
+        	employee_picture
+        )
+        VALUES (
+            #{employeeId},
+            #{employeeName},
+            #{employeeAge},
+            #{employeePhone},
+            #{employeeBusiness},
+            #{employeePwd},
+            #{employeeService},
+            #{employeeMoney},
+            #{employeePicture}
+        )
+    </insert>
+
+
+    <!-- 更新服务人员 -->
+    <update id="updateEmployee" parameterType="com.example.demo2.entity.evt.EmployeeEvt">
+        UPDATE employee_tbl
+        <set>
+            <if test="employeeName != null and employeeName != '' ">
+            employee_name = #{employeeName},
+            </if>
+            <if test="employeeAge != null and employeeAge != '' ">
+            employee_age = #{employeeAge},
+            </if>
+            <if test="employeePhone != null and employeePhone != '' ">
+            employee_phone = #{employeePhone},
+            </if>
+            <if test="employeeBusiness != null and employeeBusiness != '' ">
+            employee_business = #{employeeBusiness},
+            </if>
+            <if test="employeePwd != null and employeePwd != '' ">
+            employee_pwd = #{employeePwd},
+            </if>
+            <if test="employeeService != null and employeeService != '' ">
+            employee_service = #{employeeService},
+            </if>
+            <if test="employeeMoney != null and employeeMoney != '' ">
+            employee_money = #{employeeMoney},
+            </if>
+            <if test="employeePicture != null and employeePicture != '' ">
+            employee_picture = #{employeePicture},
+            </if>
+        </set>
+        WHERE employee_id = #{employeeId}
+    </update>
+
+    <!-- 删除服务人员信息 -->
+    <delete id="deleteEmployee" parameterType="com.example.demo2.entity.evt.EmployeeIdEvt">
+        DELETE FROM employee_tbl WHERE employee_id = #{employeeId}
+    </delete>
+
+    <!-- 获取服务人员信息 -->
+    <select id="getOneEmployeeInfo" resultType="com.example.demo2.entity.OneEmployeeVm">
+        SELECT
+        e.employee_id AS employeeId,
+        e.employee_name AS employeeName,
+        e.employee_age AS employeeAge,
+        e.employee_phone AS employeePhone,
+        e.employee_business AS employeeBusiness,
+        e.employee_pwd AS employeePwd,
+        e.employee_service AS employeeService,
+        e.employee_money AS employeeMoney,
+        e.employee_picture AS employeePicture
+        FROM
+        employee_tbl e
+        <where>
+            <if test="employeeId != null and employeeId != '' ">
+                AND e.employee_id = #{employeeId}
+            </if>
+        </where>
+    </select>
+
+    <select id="employeeLogin" resultType="com.example.demo2.entity.OneEmployeeVm">
+        SELECT
+        e.employee_id AS employeeId,
+        e.employee_name AS employeeName,
+        e.employee_age AS employeeAge,
+        e.employee_phone AS employeePhone,
+        e.employee_business AS employeeBusiness,
+        e.employee_pwd AS employeePwd,
+        e.employee_service AS employeeService,
+        e.employee_money AS employeeMoney,
+        e.employee_picture AS employeePicture
+        FROM
+        employee_tbl e
+        <where>
+            <if test="employeeId != null and employeeId != '' ">
+                AND e.employee_id = #{employeeId}
+            </if>
+            <if test="employeePwd != null and employeePwd != '' ">
+                AND e.employee_pwd = #{employeePwd}
+            </if>
+        </where>
+    </select>
+
+</mapper>
